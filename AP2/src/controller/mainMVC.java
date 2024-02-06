@@ -8,9 +8,6 @@ import view.View_Accueil;
 public class mainMVC {
 	private static model m;
 
-
-	
-
 	public static model getM() {
 		return m;
 	}

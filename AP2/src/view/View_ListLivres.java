@@ -229,37 +229,48 @@ public class View_ListLivres {
 		frame.getContentPane().add(lblNewLabel_requeteResultat);
 		
 		JButton btnNewButton_Emprunter = new JButton("Emprunter");
-		btnNewButton_Emprunter.setBounds(757, 390, 105, 31);
-		btnNewButton_Emprunter.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				String num = textField_3.getText();
-				String ISBN = textField_4.getText();
-				
-				try {
-					for (int i=0; i!=mainMVC.getM().getListLivre().size()/3;i++) {
-						if(mainMVC.getM().getListLivre().get(i).getadherent() != null) {
-							System.out.println("livre non disponible");
-						}else {
-							
-						}
-						if(mainMVC.getM().getListLivre().get(i).getISBN() != ISBN){
-							System.out.println("livre non existe");
-						}
-							else {
-							
-							mainMVC.getM().emprunter_livre(num, ISBN);
-						}
-					}
-					
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();	
-				}
+	    btnNewButton_Emprunter.setBounds(757, 390, 105, 31);
+	    btnNewButton_Emprunter.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            String num = textField_3.getText();
+	            String ISBN = textField_4.getText();
+	            boolean livreDisponible = true;
+	            boolean livreExiste = false;
 
-			}
-		});
-		frame.getContentPane().add(btnNewButton_Emprunter);
-		       
-    }
+	            try {
+	                for (int i = 0; i < mainMVC.getM().getListLivre().size() / 3; i++) {
+	                    LIVRE livre = mainMVC.getM().getListLivre().get(i);
+
+	                    if (livre.getadherent() != null) {
+	                        livreDisponible = true;
+	                    }
+
+	                    if (livre.getISBN().equals(ISBN)) {
+	                        livreExiste = true;
+	                    }
+	                }
+
+	                if (livreExiste) {
+	                    if (livreDisponible) {
+	                        mainMVC.getM().emprunter_livre(num, ISBN);
+	                        System.out.println("Livre emprunté avec succès");
+	                    } else {
+	                        System.out.println("Livre non disponible, déjà emprunté");
+	                    }
+	                } else {
+	                    System.out.println("Livre n'existe pas");
+	                }
+
+	            } catch (SQLException e1) {
+	                // TODO Auto-generated catch block
+	                e1.printStackTrace();
+	            }
+	        }
+	    });
+	    frame.getContentPane().add(btnNewButton_Emprunter);
+
+	    // ... Existing code ...
+
+	}
+    
 }
