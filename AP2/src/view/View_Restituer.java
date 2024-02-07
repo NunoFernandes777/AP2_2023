@@ -18,7 +18,6 @@ public class View_Restituer {
 
 	private JFrame frame;
 	private JTextField textField_isbn;
-	private JTextField textField_adherent;
 
 	/**
 	 * Launch the application.
@@ -52,40 +51,31 @@ public class View_Restituer {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("BLABLA");
-		lblNewLabel.setBounds(360, 299, 179, 29);
-		frame.getContentPane().add(lblNewLabel);
+		JLabel lblNewLabel_resultat = new JLabel("");
+		lblNewLabel_resultat.setBounds(344, 288, 179, 29);
+		frame.getContentPane().add(lblNewLabel_resultat);
 		
 		
 		
 		textField_isbn = new JTextField();
-		textField_isbn.setBounds(195, 196, 213, 20);
+		textField_isbn.setBounds(326, 196, 213, 20);
 		frame.getContentPane().add(textField_isbn);
 		textField_isbn.setColumns(10);
 		
-		textField_adherent = new JTextField();
-		textField_adherent.setColumns(10);
-		textField_adherent.setBounds(492, 196, 213, 20);
-		frame.getContentPane().add(textField_adherent);
-		
 		JLabel lblIsbn = new JLabel("ISBN");
 		lblIsbn.setHorizontalAlignment(SwingConstants.CENTER);
-		lblIsbn.setBounds(212, 156, 179, 29);
+		lblIsbn.setBounds(344, 156, 179, 29);
 		frame.getContentPane().add(lblIsbn);
-		
-		JLabel lblNewLabel_1_1 = new JLabel("Adherent");
-		lblNewLabel_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1_1.setBounds(510, 156, 179, 29);
-		frame.getContentPane().add(lblNewLabel_1_1);
 		
 		JButton btnNewButton = new JButton("Restituer");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String num = textField_adherent.getText();
 				String ISBN = textField_isbn.getText();
 				
 				try {
-					mainMVC.getM().emprunter_livre(num, ISBN);
+					mainMVC.getM().restituer_livre(ISBN);
+					lblNewLabel_resultat.setText("Livre Restitue");
+	
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();	
@@ -94,7 +84,7 @@ public class View_Restituer {
 
 			}
 		});
-		btnNewButton.setBounds(587, 302, 89, 23);
+		btnNewButton.setBounds(389, 241, 89, 23);
 		frame.getContentPane().add(btnNewButton);
 		
 	}

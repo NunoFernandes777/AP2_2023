@@ -244,19 +244,12 @@ public class model {
 		}
 	}
 	
-	public static void restituer_livre(String adherent, String ISBN) throws SQLException{
+	public static void restituer_livre(String ISBN) throws SQLException{
 		try (Connection connection = (Connection) model.getCon()) {	
-			String query = "update LIVRE set adherent = NULL where adherent = ? and ISBN = ?";
+			String query = "update LIVRE set adherent = NULL where ISBN = ?";
 			try (PreparedStatement stm = (PreparedStatement) connection.prepareStatement(query)){
-				
-				/*for (int i=0; i!=mainMVC.getM().getListLivre().size()/3;i++) {
-					if(mainMVC.getM().getListLivre().get(i).getadherent() != null) {
-						
-					}
-				}*/
-				
-				stm.setString(1, adherent);
-				stm.setString(2, ISBN);
+
+				stm.setString(1, ISBN);
 	      
 				stm.executeUpdate();
 				}

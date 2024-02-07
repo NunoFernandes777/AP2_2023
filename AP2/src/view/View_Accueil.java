@@ -33,9 +33,7 @@ public class View_Accueil {
 	private JFrame frame;
 	private JTextField textField_email;
 	private JTextField textField_password;
-	
-	
-	
+
 	/**
 	 * Launch the application.
 	 */

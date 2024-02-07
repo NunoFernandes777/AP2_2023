@@ -253,7 +253,8 @@ public class View_ListLivres {
 	                if (livreExiste) {
 	                    if (livreDisponible) {
 	                        mainMVC.getM().emprunter_livre(num, ISBN);
-	                        System.out.println("Livre emprunté avec succès");
+	                        System.out.println("Livre emprunté avec succès");	               
+
 	                    } else {
 	                        System.out.println("Livre non disponible, déjà emprunté");
 	                    }
@@ -268,9 +269,6 @@ public class View_ListLivres {
 	        }
 	    });
 	    frame.getContentPane().add(btnNewButton_Emprunter);
-
-	    // ... Existing code ...
-
 	}
     
 }
