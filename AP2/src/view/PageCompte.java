@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import controller.mainMVC;
+import model.Session;
 
 import java.awt.Font;
 import javax.swing.JButton;
@@ -14,6 +15,14 @@ import java.awt.event.ActionEvent;
 public class PageCompte{
 
 	private JFrame frame;
+	private JLabel lblNewLabel_Nom_out;
+    private JLabel lblNewLabel_Prenom_out;
+    private JLabel lblNewLabel_Email_out;
+    private JLabel lblNewLabel_LibresE_out;
+    
+    private String nom; 
+    private String prenom;
+
 
 	/**
 	 * Launch the application.
@@ -22,8 +31,10 @@ public class PageCompte{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PageCompte window = new PageCompte();
-					window.frame.setVisible(true);
+					 PageCompte window = new PageCompte();
+		                window.frame.setVisible(true);
+					
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -56,12 +67,12 @@ public class PageCompte{
 				
 			}
 		});
+
 		frame.getContentPane().setLayout(null);
-		
 		JLabel lblNewLabel = new JLabel("Mon Compte");
 		lblNewLabel.setBounds(280, 11, 312, 100);
 		lblNewLabel.setFont(new Font("Times New Roman", Font.ITALIC, 60));
-		frame.getContentPane().add(lblNewLabel);
+		frame.getContentPane().add(lblNewLabel);	
 		
 		JButton Button_Restituer = new JButton("Restituer");
 		Button_Restituer.setBounds(10, 122, 282, 35);
@@ -100,6 +111,7 @@ public class PageCompte{
 		btnDeconnecter.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		frame.getContentPane().add(btnDeconnecter);
 		
+		
 		JLabel lblNewLabel_Nom = new JLabel("Nom :");
 		lblNewLabel_Nom.setBounds(10, 215, 42, 25);
 		lblNewLabel_Nom.setFont(new Font("Times New Roman", Font.PLAIN, 15));
@@ -121,7 +133,6 @@ public class PageCompte{
 		lblNewLabel_Email.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		frame.getContentPane().add(lblNewLabel_Email);
 		
-
 		JLabel lblNewLabel_Nom_out = new JLabel("");
 		lblNewLabel_Nom_out.setBounds(62, 221, 120, 14);
 		frame.getContentPane().add(lblNewLabel_Nom_out);
@@ -133,11 +144,21 @@ public class PageCompte{
 		JLabel lblNewLabel_Email_out = new JLabel("");
 		lblNewLabel_Email_out.setBounds(70, 293, 120, 14);
 		frame.getContentPane().add(lblNewLabel_Email_out);
-		
-		
+
 		JLabel lblNewLabel_LibresE_out = new JLabel("");
 		lblNewLabel_LibresE_out.setBounds(133, 357, 120, 14);
 		frame.getContentPane().add(lblNewLabel_LibresE_out);
+        
+		String userEmail = (String) Session.getAttribute("userEmail");
+        String userNom = (String) Session.getAttribute("userNom");
+        String userPrenom = (String) Session.getAttribute("userPrenom");
+        int nbLivres = (int) Session.getAttribute("nbLivres");
 
+        // Set user information labels
+        lblNewLabel_Nom_out.setText(userNom);
+        lblNewLabel_Prenom_out.setText(userPrenom);
+        lblNewLabel_Email_out.setText(userEmail);
+        lblNewLabel_LibresE_out.setText(String.valueOf(nbLivres));
 	}
+	
 }

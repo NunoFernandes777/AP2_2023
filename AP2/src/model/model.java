@@ -204,34 +204,49 @@ public class model {
 	    return null;
 	}
 	
-	public static String compteconn(String email, String password) {
-		try (Connection connection = (Connection) model.getCon()) {
-            // Consultar o banco de dados
-            String query = "SELECT * FROM adherent WHERE email = ? AND password = ?";
-            try (PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(query)) { 
-            	
-                preparedStatement.setString(1, email);
-                preparedStatement.setString(2, password);
-             
-                ResultSet resultSet = preparedStatement.executeQuery();
+	public static boolean compteconn(String email, String password) {
+	    try (Connection connection = (Connection) model.getCon()) {
+	        String query = "SELECT * FROM adherent WHERE email = ? AND password = ?";
+	        try (PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(query)) { 
+	            preparedStatement.setString(1, email);
+	            preparedStatement.setString(2, password);
 
-                if (resultSet.next()) {
-                    // Login bem-sucedido
-                    PageCompte f1 = new PageCompte();
-                    PageCompte.main(null);
-                    
-                } 
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            // Lide com exceções de SQL aqui
-        }
-		
-		return email;
-		
+	            ResultSet resultSet = preparedStatement.executeQuery();
+
+	            if (resultSet.next()) {               
+	            	
+
+					Session.setAttribute("numAdherent", resultSet.getString("num"));
+	                Session.setAttribute("userEmail", email);
+	                Session.setAttribute("userNom", resultSet.getString("nom"));
+	                Session.setAttribute("userPrenom", resultSet.getString("prenom"));
+	                
+
+	                String countQuery = "SELECT COUNT(*) AS nbLivres FROM livre, adherent WHERE livre.adherent = adherent.num AND adherent.email = ?";
+	                try (PreparedStatement countStatement = connection.prepareStatement(countQuery)) {
+	                    countStatement.setString(1, email);
+	                    ResultSet countResult = countStatement.executeQuery();
+	                    if (countResult.next()) {
+	                        int nbLivres = countResult.getInt("nbLivres");
+	                        Session.setAttribute("nbLivres", nbLivres);
+	                  
+	                    }
+	                }
+
+	                // Open the PageCompte
+	                PageCompte pageCompte = new PageCompte();
+	                PageCompte.main(null);
+
+	                return true;
+	            }
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    }
+	    return false;
 	}
 	
-	public static void emprunter_livre(String adherent, String ISBN) throws SQLException{
+	/*public static void emprunter_livre(String adherent, String ISBN) throws SQLException{
 		try (Connection connection = (Connection) model.getCon()) {	
 			String query = "update LIVRE set adherent = ? where ISBN = ? ";
 			try (PreparedStatement stm = (PreparedStatement) connection.prepareStatement(query)){
@@ -242,7 +257,21 @@ public class model {
 				stm.executeUpdate();
 				}
 		}
+	}*/
+	
+	public static void emprunter_livre(String ISBN) throws SQLException{
+		try (Connection connection = (Connection) model.getCon()) {	
+			String query = "INSERT INTO historique_emprunts (ISBN_Livre, num_Adherent, date_emprunt) VALUES (?, ?, CURRENT_DATE)";
+			try (PreparedStatement stm = (PreparedStatement) connection.prepareStatement(query)){
+				
+				stm.setString(1, ISBN);
+				stm.setString(2, (String) Session.getAttribute("numAdherent"));
+	      
+				stm.executeUpdate();
+				}
+		}
 	}
+	
 	
 	public static void restituer_livre(String ISBN) throws SQLException{
 		try (Connection connection = (Connection) model.getCon()) {	

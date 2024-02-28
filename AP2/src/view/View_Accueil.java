@@ -112,11 +112,9 @@ public class View_Accueil {
 				
 				String email = textField_email.getText();
 				String password = textField_password.getText();
-				
 				mainMVC.getM().compteconn(email, password);
-			
-		    }
 
+			}
 		});
 		btnConnection.setFont(new Font("Times New Roman", Font.PLAIN, 17));
 		btnConnection.setBounds(360, 341, 138, 43);

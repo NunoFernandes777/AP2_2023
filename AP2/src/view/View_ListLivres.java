@@ -232,7 +232,6 @@ public class View_ListLivres {
 	    btnNewButton_Emprunter.setBounds(757, 390, 105, 31);
 	    btnNewButton_Emprunter.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	            String num = textField_3.getText();
 	            String ISBN = textField_4.getText();
 	            boolean livreDisponible = true;
 	            boolean livreExiste = false;
@@ -252,7 +251,7 @@ public class View_ListLivres {
 
 	                if (livreExiste) {
 	                    if (livreDisponible) {
-	                        mainMVC.getM().emprunter_livre(num, ISBN);
+	                        mainMVC.getM().emprunter_livre(ISBN);
 	                        System.out.println("Livre emprunté avec succès");	               
 
 	                    } else {
