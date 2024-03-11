@@ -17,6 +17,7 @@ import com.mysql.jdbc.Connection;
 
 import controller.mainMVC;
 import model.LIVRE;
+import model.Session;
 import model.model;
 
 import javax.swing.AbstractButton;
@@ -34,9 +35,17 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.List;
 
+import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import javax.swing.DefaultListModel;
+
 public class View_ListLivres {
 
 	private JFrame frame;
+	private JFrame frameAdmin;
 	private JTextField textField_ISBN_searchbar;
 	private JTextField textField_inf_price;
 	private JTextField textField_sup_price;
@@ -45,11 +54,15 @@ public class View_ListLivres {
 	private JTextField textField_2;
 	private static model model;
 	private JTextField textField_3;
-	private JTextField textField_4;
+	private JTextField textField_4;	
+	private DefaultListModel<String> listModel;
+    private JList<String> list;
+
     
 
 	/**
 	 * Launch the application.
+	 * @wbp.parser.entryPoint
 	 */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -78,7 +91,9 @@ public class View_ListLivres {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @wbp.parser.entryPoint
 	 */
+
 	private void initialize() {
 		
 		frame = new JFrame();
@@ -172,6 +187,7 @@ public class View_ListLivres {
                 PageCompte.main(null);
 			}
 		});
+		
 		btnNewButton_Back.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		frame.getContentPane().add(btnNewButton_Back);
 		
@@ -186,32 +202,26 @@ public class View_ListLivres {
 		lblNewLabel_emprunteNO.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_emprunteNO.setForeground(new Color(255, 0, 0));
 		frame.getContentPane().add(lblNewLabel_emprunteNO);
-		
-		List list = new List();
+
+		listModel = new DefaultListModel<>();
+		list = new JList<>(listModel);
 		list.setBounds(333, 29, 535, 315);
+		
+		for (int i = 0; i != mainMVC.getM().getListLivre().size(); i++) {
+            listModel.addElement(mainMVC.getM().getListLivre().get(i).Ligne());
+        }
+		
 		frame.getContentPane().add(list);
-		
-		for (int i=0; i!=mainMVC.getM().getListLivre().size()/3;i++) {
-			list.add(
-					mainMVC.getM().getListLivre().get(i).Ligne()
-					);
-		}
-		
-		
 		
 		textField_3 = new JTextField();
 		textField_3.setBounds(646, 396, 84, 20);
 		textField_3.setColumns(10);
 		frame.getContentPane().add(textField_3);
-		
-
-		
+				
 		textField_4 = new JTextField();
 		textField_4.setBounds(460, 396, 84, 20);
 		textField_4.setColumns(10);
 		frame.getContentPane().add(textField_4);
-		
-		
 		
 		JLabel lblNewLabel_5 = new JLabel("ISBN :");
 		lblNewLabel_5.setBounds(413, 397, 37, 19);
@@ -228,46 +238,58 @@ public class View_ListLivres {
 		lblNewLabel_requeteResultat.setBounds(333, 350, 535, 24);
 		frame.getContentPane().add(lblNewLabel_requeteResultat);
 		
+		
+		
 		JButton btnNewButton_Emprunter = new JButton("Emprunter");
-	    btnNewButton_Emprunter.setBounds(757, 390, 105, 31);
-	    btnNewButton_Emprunter.addActionListener(new ActionListener() {
-	        public void actionPerformed(ActionEvent e) {
-	            String ISBN = textField_4.getText();
-	            boolean livreDisponible = true;
-	            boolean livreExiste = false;
+		btnNewButton_Emprunter.setBounds(757, 390, 105, 31);
+		btnNewButton_Emprunter.setVisible(true);
+		btnNewButton_Emprunter.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        String Adherent = textField_4.getText();
+		        String ISBN = textField_3.getText();
+		        boolean livreDisponible = true;
+		        boolean livreExiste = false;
 
-	            try {
-	                for (int i = 0; i < mainMVC.getM().getListLivre().size() / 3; i++) {
-	                    LIVRE livre = mainMVC.getM().getListLivre().get(i);
+		        try {
+		            for (int i = 0; i < mainMVC.getM().getListLivre().size() / 3; i++) {
+		                LIVRE livre = mainMVC.getM().getListLivre().get(i);
 
-	                    if (livre.getadherent() != null) {
-	                        livreDisponible = true;
-	                    }
+		                if (livre.getadherent() != null) {
+		                    livreDisponible = true;
+		                }
 
-	                    if (livre.getISBN().equals(ISBN)) {
-	                        livreExiste = true;
-	                    }
-	                }
+		                if (livre.getISBN().equals(ISBN)) {
+		                    livreExiste = true;
+		                }
+		            }
 
-	                if (livreExiste) {
-	                    if (livreDisponible) {
-	                        mainMVC.getM().emprunter_livre(ISBN);
-	                        System.out.println("Livre emprunté avec succès");	               
+		            if (livreExiste) {
+		                if (livreDisponible) {
+		                    mainMVC.getM().emprunterLivre(ISBN, Adherent);
+		                    model.getall();
+		                    System.out.println("Livre emprunté avec succès");
+		                    
+		                    SwingUtilities.invokeLater(() -> {
+		                        listModel.clear();
+		                        for (int i = 0; i != mainMVC.getM().getListLivre().size(); i++) {
+		                            listModel.addElement(mainMVC.getM().getListLivre().get(i).Ligne());
+		                        }
+		                    });
+		                    
+		                } else {
+		                    System.out.println("Livre non disponible, déjà emprunté");
+		                }
+		            } else {
+		                System.out.println("Livre n'existe pas");
+		            }
 
-	                    } else {
-	                        System.out.println("Livre non disponible, déjà emprunté");
-	                    }
-	                } else {
-	                    System.out.println("Livre n'existe pas");
-	                }
-
-	            } catch (SQLException e1) {
-	                // TODO Auto-generated catch block
-	                e1.printStackTrace();
-	            }
-	        }
+		        } catch (SQLException e1) {
+		            e1.printStackTrace();
+		        }
+		    }
 	    });
-	    frame.getContentPane().add(btnNewButton_Emprunter);
-	}
-    
+		frame.getContentPane().add(btnNewButton_Emprunter);
+		
+		} 
+	
 }

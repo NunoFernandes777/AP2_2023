@@ -27,12 +27,13 @@ import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 
 import java.awt.Color;
+import javax.swing.JPasswordField;
 
 public class View_Accueil {
 
 	private JFrame frame;
 	private JTextField textField_email;
-	private JTextField textField_password;
+	private JPasswordField textField_password;
 
 	/**
 	 * Launch the application.
@@ -81,19 +82,18 @@ public class View_Accueil {
 		frame.getContentPane().add(lblNewLabel);
 		
 		textField_email = new JTextField();
-		textField_email.setBounds(250, 194, 374, 43);
+		textField_email.setBounds(250, 194, 375, 43);
 		frame.getContentPane().add(textField_email);
 		textField_email.setColumns(10);
-		
-		textField_password = new JTextField();
-		textField_password.setColumns(10);
-		textField_password.setBounds(250, 265, 374, 43);
-		frame.getContentPane().add(textField_password);
 		
 		JLabel lblNewLabel_email = new JLabel("email");
 		lblNewLabel_email.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		lblNewLabel_email.setBounds(209, 193, 31, 43);
 		frame.getContentPane().add(lblNewLabel_email);
+		
+		textField_password = new JPasswordField();
+		textField_password.setBounds(250, 265, 375, 43);
+		frame.getContentPane().add(textField_password);
 		
 		JLabel lblNewLabel_password = new JLabel("password");
 		lblNewLabel_password.setFont(new Font("Times New Roman", Font.PLAIN, 15));
@@ -119,5 +119,7 @@ public class View_Accueil {
 		btnConnection.setFont(new Font("Times New Roman", Font.PLAIN, 17));
 		btnConnection.setBounds(360, 341, 138, 43);
 		frame.getContentPane().add(btnConnection);
+		
+		
 	}
 }

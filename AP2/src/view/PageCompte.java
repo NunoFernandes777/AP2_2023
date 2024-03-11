@@ -100,8 +100,14 @@ public class PageCompte{
 		Button_ListeLivres.setBounds(592, 122, 282, 35);
 		Button_ListeLivres.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				View_ListLivres f1 = new View_ListLivres();
-				f1.main(null);
+				int typeAdherent = (int) Session.getAttribute("typeAdherent");
+				if(typeAdherent == 0) {
+					View_ListLivres f1 = new View_ListLivres();
+					f1.main(null);
+				} else {
+					AdminView_ListLivres f2 = new AdminView_ListLivres();
+					f2.main(null);
+				}
 			}
 		});
 		Button_ListeLivres.setFont(new Font("Times New Roman", Font.PLAIN, 15));
@@ -154,7 +160,6 @@ public class PageCompte{
         String userPrenom = (String) Session.getAttribute("userPrenom");
         int nbLivres = (int) Session.getAttribute("nbLivres");
 
-        // Set user information labels
         lblNewLabel_Nom_out.setText(userNom);
         lblNewLabel_Prenom_out.setText(userPrenom);
         lblNewLabel_Email_out.setText(userEmail);

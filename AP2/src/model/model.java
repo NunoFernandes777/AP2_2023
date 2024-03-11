@@ -74,6 +74,9 @@ public class model {
 	public static void getall() throws SQLException
 	{
 		Connection con;
+		ListLivre.clear();
+		ListAuteur.clear();
+		ListAdherent.clear();
 
 		//on initialise la connection
 		con = getCon();
@@ -220,6 +223,7 @@ public class model {
 	                Session.setAttribute("userEmail", email);
 	                Session.setAttribute("userNom", resultSet.getString("nom"));
 	                Session.setAttribute("userPrenom", resultSet.getString("prenom"));
+	                Session.setAttribute("typeAdherent", resultSet.getInt("type"));
 	                
 
 	                String countQuery = "SELECT COUNT(*) AS nbLivres FROM livre, adherent WHERE livre.adherent = adherent.num AND adherent.email = ?";
@@ -246,19 +250,22 @@ public class model {
 	    return false;
 	}
 	
-	/*public static void emprunter_livre(String adherent, String ISBN) throws SQLException{
-		try (Connection connection = (Connection) model.getCon()) {	
-			String query = "update LIVRE set adherent = ? where ISBN = ? ";
-			try (PreparedStatement stm = (PreparedStatement) connection.prepareStatement(query)){
-				
-				stm.setString(1, adherent);
-				stm.setString(2, ISBN);
-	      
-				stm.executeUpdate();
-				}
-		}
-	}*/
-	
+	public static void emprunterLivre(String adherent, String ISBN) throws SQLException {
+	    try (Connection connection = model.getCon()) {	
+	        String query = "UPDATE LIVRE SET adherent = ? WHERE ISBN = ?";
+	        try (PreparedStatement stm = connection.prepareStatement(query)) {
+	            stm.setString(1, adherent);
+	            stm.setString(2, ISBN);
+	            stm.executeUpdate();
+	        }
+	    } catch (SQLException e) {
+
+	        e.printStackTrace();
+
+	        throw new RuntimeException("Failed to update LIVRE table", e);
+	    }
+	}
+		/*
 	public static void emprunter_livre(String ISBN) throws SQLException{
 		try (Connection connection = (Connection) model.getCon()) {	
 			String query = "INSERT INTO historique_emprunts (ISBN_Livre, num_Adherent, date_emprunt) VALUES (?, ?, CURRENT_DATE)";
@@ -272,7 +279,7 @@ public class model {
 		}
 	}
 	
-	
+	}*/
 	public static void restituer_livre(String ISBN) throws SQLException{
 		try (Connection connection = (Connection) model.getCon()) {	
 			String query = "update LIVRE set adherent = NULL where ISBN = ?";
@@ -285,5 +292,18 @@ public class model {
 		}
 	}
 	
+	public static void creer_livre(String ISBN, String titre, float prix) throws SQLException{
+		try (Connection connection = (Connection) model.getCon()) {	
+			String query = "INSERT INTO livre (ISBN, titre, prix) VALUES (?, ?, ?);";
+			try (PreparedStatement stm = (PreparedStatement) connection.prepareStatement(query)){
+
+				stm.setString(1, ISBN);
+				stm.setString(2, titre);
+				stm.setFloat(3, prix);
+	      
+				stm.executeUpdate();
+				}
+		}
+	}
 	
 }
