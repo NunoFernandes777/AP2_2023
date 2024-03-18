@@ -9,16 +9,18 @@ public class LIVRE {
 	private int prix;
 	private ADHERENT adherent ;
 	private AUTEUR auteur;
-
-	public LIVRE(String ISBN, String titre, int prix, ADHERENT adherent, AUTEUR auteur) {
+	private GENRE genre;
+	
+	public LIVRE(String iSBN, String titre, int prix, ADHERENT adherent, AUTEUR auteur, GENRE genre) {
 		super();
-		this.ISBN = ISBN;
+		this.ISBN = iSBN;
 		this.titre = titre;
 		this.prix = prix;
 		this.adherent = adherent;
 		this.auteur = auteur;
-
+		this.genre = genre;
 	}
+
 	public String getISBN() {
 		return ISBN;
 	}
@@ -49,7 +51,14 @@ public class LIVRE {
 	public void setauteur(AUTEUR auteur) {
 		this.auteur = auteur;
 	}
+	public GENRE getGenre() {
+		return genre;
+	}
+	public void setGenre(GENRE genre) {
+		this.genre = genre;
+	}
 	
+
 	public void AFFICHER() {
 		System.out.println("Voici les info du livre n°"+ISBN);
 		System.out.println("titre : "+titre);
@@ -68,7 +77,7 @@ public class LIVRE {
 	
 	public String Ligne() {
 		String str;
-		str="ISBN : " + ISBN + " / Titre : " + titre + "" ;
+		str="ISBN : " + ISBN + " / Titre : " + titre + "";
 		if (auteur==null)
 			str=str+" de "+"Auteur inconnu";
 		else
@@ -77,6 +86,11 @@ public class LIVRE {
 			str=str+" - "+"dispo";
 		else
 			str=str+" - "+"Non dispo";	
+		if (genre==null)
+			str=str+" - "+"Genre Inconnu";
+		else
+			str=str+" / genre : "+ genre.getLibelle();
+			str=str+" / Prix : "+ prix;
 		return str;
 	}
 

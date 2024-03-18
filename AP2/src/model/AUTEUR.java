@@ -21,21 +21,6 @@ public class AUTEUR {
 	public void setNum(String num) {
 		this.num = num;
 	}
-	public AUTEUR(String nom, String prenom, String date_naissance, String description) {
-		super();
-		this.nom = nom;
-		this.prenom = prenom;
-		this.date_naissance = date_naissance;
-		this.description = description;
-	}
-	public AUTEUR() {
-		// TODO Auto-generated constructor stub
-		num="";
-		nom="";
-		prenom="";
-		date_naissance="";
-		description="";
-	}
 	public String getNom() {
 		return nom;
 	}
@@ -60,5 +45,5 @@ public class AUTEUR {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 }

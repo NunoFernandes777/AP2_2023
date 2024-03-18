@@ -23,6 +23,7 @@ public class model {
 	private static ArrayList<LIVRE> ListLivre;
 	private static ArrayList<AUTEUR> ListAuteur;
 	private static ArrayList<ADHERENT> ListAdherent;
+	private static ArrayList<GENRE> ListGenre;
 
 	public static ArrayList<LIVRE> getListLivre() {
 		return ListLivre;
@@ -42,6 +43,14 @@ public class model {
 	public static void setListAdherent(ArrayList<ADHERENT> listAdherent) {
 		ListAdherent = listAdherent;
 	}
+	public static ArrayList<GENRE> getListGenre() {
+		return ListGenre;
+	}
+	public static void setListGenre(ArrayList<GENRE> listGenre) {
+		ListGenre = listGenre;
+	}
+	
+	
 	public static Connection getCon() {
 		Connection con;
 		String BDD = "2023ap2";
@@ -69,6 +78,7 @@ public class model {
 		ListLivre=new ArrayList<LIVRE> ();
 		ListAuteur=new ArrayList<AUTEUR> ();
 		ListAdherent=new ArrayList<ADHERENT> ();
+		ListGenre=new ArrayList<GENRE> ();
 	}
 	
 	public static void getall() throws SQLException
@@ -77,6 +87,7 @@ public class model {
 		ListLivre.clear();
 		ListAuteur.clear();
 		ListAdherent.clear();
+		ListGenre.clear();
 
 		//on initialise la connection
 		con = getCon();
@@ -103,7 +114,7 @@ public class model {
 		while(resultats.next())
 		{
 			System.out.println(resultats.getInt("ISBN")+" - "+resultats.getString("titre"));
-			LIVRE l = new LIVRE(String.valueOf(resultats.getInt("ISBN")),resultats.getString("titre"),resultats.getInt("prix"), null, null);
+			LIVRE l = new LIVRE(String.valueOf(resultats.getInt("ISBN")),resultats.getString("titre"),resultats.getInt("prix"), null, null, null);
 			ListLivre.add(l);
 		}
 		//********************************************************
@@ -129,6 +140,18 @@ public class model {
 		{
 			ADHERENT adherent= new ADHERENT(resultats.getString("num"),resultats.getString("nom"),resultats.getString("prenom"),resultats.getString("email"),resultats.getString("password"));
 			ListAdherent.add(adherent);
+		}
+		
+		//********************************************************
+		//ON REMPLI NOTRE LISTE DE GENRES
+		//********************************************************
+		requete = "SELECT * FROM genre";
+		stm=con.createStatement();
+		resultats=stm.executeQuery(requete);
+		while(resultats.next())
+		{
+			GENRE genre= new GENRE(resultats.getInt("num"),resultats.getString("libelle"));
+			ListGenre.add(genre);
 		}
 
 
@@ -178,6 +201,25 @@ public class model {
 			}
 
 		}
+		
+		//********************************************************
+		//ON MET A JOUR LA LISTE DE LIVRE AVEC LE GENRE
+		//********************************************************
+		requete = "SELECT ISBN,genre_litteraire FROM livre";
+		stm=con.createStatement();
+		resultats=stm.executeQuery(requete);
+		while(resultats.next())
+		{
+			String ISBN=resultats.getString("ISBN");
+			int num=resultats.getInt("genre_litteraire");
+			LIVRE l=findlivre(ISBN);
+			GENRE legenre=findgenre(num);
+			
+			if (l != null) {
+			    l.setGenre(legenre);
+			}
+
+		}
 	}
 	
 	public static LIVRE findlivre(String ISBN) {
@@ -202,6 +244,15 @@ public class model {
 	    for (int i = 0; i != ListAdherent.size(); i++) {
 	        if (ListAdherent.get(i).getNum().equals(num)) {
 	            return ListAdherent.get(i);
+	        }
+	    }
+	    return null;
+	}
+	
+	public static GENRE findgenre(int num) {
+	    for (int i = 0; i != ListGenre.size(); i++) {
+	        if (ListGenre.get(i).getNum() == num) {
+	            return ListGenre.get(i);
 	        }
 	    }
 	    return null;
@@ -265,10 +316,10 @@ public class model {
 	        throw new RuntimeException("Failed to update LIVRE table", e);
 	    }
 	}
-		/*
-	public static void emprunter_livre(String ISBN) throws SQLException{
+		
+	public static void historique_Livre_emprunter(String ISBN) throws SQLException{
 		try (Connection connection = (Connection) model.getCon()) {	
-			String query = "INSERT INTO historique_emprunts (ISBN_Livre, num_Adherent, date_emprunt) VALUES (?, ?, CURRENT_DATE)";
+			String query = "INSERT INTO historique_emprunts (ISBN_Livre, num_Adherent, date_emprunter) VALUES (?, ?, CURRENT_DATE)";
 			try (PreparedStatement stm = (PreparedStatement) connection.prepareStatement(query)){
 				
 				stm.setString(1, ISBN);
@@ -279,7 +330,19 @@ public class model {
 		}
 	}
 	
-	}*/
+	public static void historique_Livre_restituer(String ISBN) throws SQLException{
+		try (Connection connection = (Connection) model.getCon()) {	
+			String query = "update historique_emprunts set date_restituer = CURRENT_DATE where ISBN_Livre = ?";
+			try (PreparedStatement stm = (PreparedStatement) connection.prepareStatement(query)){
+				
+				stm.setString(1, ISBN);
+	      
+				stm.executeUpdate();
+				}
+		}
+	}
+	
+	
 	public static void restituer_livre(String ISBN) throws SQLException{
 		try (Connection connection = (Connection) model.getCon()) {	
 			String query = "update LIVRE set adherent = NULL where ISBN = ?";
@@ -300,6 +363,42 @@ public class model {
 				stm.setString(1, ISBN);
 				stm.setString(2, titre);
 				stm.setFloat(3, prix);
+	      
+				stm.executeUpdate();
+				}
+		}
+	}
+	
+	public static void creer_genre(String libelle) throws SQLException{
+		try (Connection connection = (Connection) model.getCon()) {	
+			String query = "INSERT INTO genre (libelle) VALUES (?);";
+			try (PreparedStatement stm = (PreparedStatement) connection.prepareStatement(query)){
+
+				stm.setString(1, libelle);
+	      
+				stm.executeUpdate();
+				}
+		}
+	}
+	
+	public static void editer_genre(String libelle) throws SQLException{
+		try (Connection connection = (Connection) model.getCon()) {	
+			String query = "update genre (libelle) VALUES (?);";
+			try (PreparedStatement stm = (PreparedStatement) connection.prepareStatement(query)){
+
+				stm.setString(1, libelle);
+	      
+				stm.executeUpdate();
+				}
+		}
+	}
+	
+	public static void supprimer_genre(String libelle) throws SQLException{
+		try (Connection connection = (Connection) model.getCon()) {	
+			String query = "DELETE FROM genre WHERE libelle = ?;";
+			try (PreparedStatement stm = (PreparedStatement) connection.prepareStatement(query)){
+
+				stm.setString(1, libelle);
 	      
 				stm.executeUpdate();
 				}

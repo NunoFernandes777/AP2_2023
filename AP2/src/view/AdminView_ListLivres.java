@@ -152,8 +152,8 @@ public class AdminView_ListLivres {
 		btnNewButton_Back.setBounds(20, 11, 50, 25);
 		btnNewButton_Back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PageCompte f1 = new PageCompte();
-                PageCompte.main(null);
+				AdminPage_Compte f1 = new AdminPage_Compte();
+                AdminPage_Compte.main(null);
 			}
 		});
 		btnNewButton_Back.setFont(new Font("Tahoma", Font.PLAIN, 11));

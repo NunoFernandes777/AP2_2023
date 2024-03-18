@@ -13,6 +13,7 @@ import controller.mainMVC;
 import model.ADHERENT;
 import model.AUTEUR;
 import model.LIVRE;
+import model.Session;
 import model.model;
 
 import javax.swing.JButton;
@@ -113,6 +114,15 @@ public class View_Accueil {
 				String email = textField_email.getText();
 				String password = textField_password.getText();
 				mainMVC.getM().compteconn(email, password);
+				
+				int typeAdherent = (int) Session.getAttribute("typeAdherent");
+				if(typeAdherent == 0) {
+					PageCompte f1 = new PageCompte();
+					f1.main(null);
+				} else {
+					AdminPage_Compte f2 = new AdminPage_Compte();
+					f2.main(null);
+				}
 
 			}
 		});

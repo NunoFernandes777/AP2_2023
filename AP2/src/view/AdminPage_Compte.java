@@ -1,4 +1,5 @@
 package view;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -12,7 +13,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class PageCompte{
+public class AdminPage_Compte {
 
 	private JFrame frame;
 	private JLabel lblNewLabel_Nom_out;
@@ -31,7 +32,7 @@ public class PageCompte{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					 PageCompte window = new PageCompte();
+					 AdminPage_Compte window = new AdminPage_Compte();
 		                window.frame.setVisible(true);
 					
 					
@@ -45,7 +46,7 @@ public class PageCompte{
 	/**
 	 * Create the application.
 	 */
-	public PageCompte() {
+	public AdminPage_Compte() {
 		initialize();
 	}
 
@@ -85,29 +86,33 @@ public class PageCompte{
 		});
 		frame.getContentPane().add(Button_Restituer);
 		
-		JButton btnEmprunterParCode = new JButton("Emprunter par Code Barre");
-		btnEmprunterParCode.setBounds(302, 122, 282, 35);
-		btnEmprunterParCode.addActionListener(new ActionListener() {
+		JButton btnCreationGenre = new JButton("Gestion Genres");
+		btnCreationGenre.setBounds(302, 122, 282, 35);
+		btnCreationGenre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				View_CodeBarre_Emprunte f2 = new View_CodeBarre_Emprunte();
+				View_CreationGenre f2 = new View_CreationGenre();
 				f2.main(null);
 			}
 		});
-		btnEmprunterParCode.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		frame.getContentPane().add(btnEmprunterParCode);
+		btnCreationGenre.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		frame.getContentPane().add(btnCreationGenre);
 		
-		JButton Button_ListeLivres = new JButton("Liste Livres");
-		Button_ListeLivres.setBounds(592, 122, 282, 35);
-		Button_ListeLivres.addActionListener(new ActionListener() {
+		JButton btnCreerLivres = new JButton("Gestion Livres");
+		btnCreerLivres.setBounds(592, 122, 282, 35);
+		btnCreerLivres.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				View_ListLivres f1 = new View_ListLivres();
-				f1.main(null);
-				
+				int typeAdherent = (int) Session.getAttribute("typeAdherent");
+				if(typeAdherent == 0) {
+					View_ListLivres f1 = new View_ListLivres();
+					f1.main(null);
+				} else {
+					AdminView_ListLivres f2 = new AdminView_ListLivres();
+					f2.main(null);
+				}
 			}
 		});
-		Button_ListeLivres.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		frame.getContentPane().add(Button_ListeLivres);
+		btnCreerLivres.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		frame.getContentPane().add(btnCreerLivres);
 		
 		
 		btnDeconnecter.setFont(new Font("Times New Roman", Font.PLAIN, 15));

@@ -74,6 +74,7 @@ public class View_Restituer {
 				
 				try {
 					mainMVC.getM().restituer_livre(ISBN);
+					mainMVC.getM().historique_Livre_restituer(ISBN);
 					lblNewLabel_resultat.setText("Livre Restitue");
 	
 				} catch (SQLException e1) {
